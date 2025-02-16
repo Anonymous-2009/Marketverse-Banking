@@ -57,11 +57,11 @@ export class AuthService {
       const user = await this.userModel.findOne({ username });
 
       if (!user || !(await bcrypt.compare(password, user.password))) {
-        throw new UnauthorizedException('Invalid credentials');
+        return { message: "Invalid credentials", success: false}
       }
 
       const payload = { sub: user._id, username: user.username };
-      return { access_token: this.jwtService.sign(payload), user };
+      return { access_token: this.jwtService.sign(payload), user, success: true };
     } catch (error) {
       console.log(error);
     }

@@ -24,7 +24,6 @@ export class TransactionService {
   }
 
   async transfer(body: TransactionDto) {
-   
     const { senderAccNo, senderAccPassword, receiverAccNo, amount } = body;
     if (!senderAccNo || !senderAccPassword || !receiverAccNo || !amount) {
       throw new BadRequestException('Many field are required');
@@ -74,22 +73,23 @@ export class TransactionService {
         transactionNo: Math.floor(1000000000 + Math.random() * 9000000000),
       });
       return { message: 'Transaction successful', transaction, body };
-      
     } catch (error) {
       console.log(error);
     }
   }
 
   async getHistory(accountNumber: number) {
-    const transactions = await this.transactionModel.find({
-      $or: [{ senderAccNo: accountNumber }, { receiverAccNo: accountNumber }],
-    }).sort({ createdAt: -1 });
+    const transactions = await this.transactionModel
+      .find({
+        $or: [{ senderAccNo: accountNumber }, { receiverAccNo: accountNumber }],
+      })
+      .sort({ createdAt: -1 });
 
     return transactions;
   }
 
   async getAllUsers() {
-    const data = await this.userModel.find({})
+    const data = await this.userModel.find({});
     return data;
   }
 }

@@ -28,13 +28,13 @@ export class TransactionController {
     }
   }
 
-  @Get('history/:no')  // Using route parameter
+  @Get('history/:no') // Using route parameter
   async getHistory(@Param('no') accountNumber: number) {
     return this.transactionService.getHistory(accountNumber);
   }
 
-  @Get('all')  // Using route parameter
+  @Get('all') // Using route parameter
   async getAll() {
-    return this.transactionService.getAllUsers()
+    return this.transactionService.getAllUsers();
   }
 }
