@@ -17,7 +17,7 @@ COPY . .
 RUN yarn run build 
 
 # Base image for running
-FROM node:latest AS runner 
+FROM node:iron-alpine AS runner 
 
 # Initialize a working directory
 WORKDIR /app
@@ -29,7 +29,7 @@ COPY --from=builder /home/banking/package.json .
 COPY --from=builder /home/banking/yarn.lock .
 
 # Expose ports
-EXPOSE 3000
+EXPOSE 4000
 
 # Start the application
 CMD ["yarn", "run", "start:prod"]

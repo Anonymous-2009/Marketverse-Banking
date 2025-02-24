@@ -46,10 +46,7 @@ export class TransactionService {
       });
       if (!receiver) return { message: 'Receiver not found', success: false };
 
-      // Check if sender has enough balance
-      if (sender.balance < amount) {
-        return { message: 'Insufficient balance', success: false };
-      }
+      
 
       // Verify sender password
       const isPasswordValid = await bcrypt.compare(
@@ -59,6 +56,11 @@ export class TransactionService {
       if (!isPasswordValid)
         return { message: 'Incorrect password', success: false };
 
+
+      // Check if sender has enough balance
+      if (sender.balance < amount) {
+        return { message: 'Insufficient balance', success: false };
+      }
       // Perform transaction
       sender.balance -= amount;
       receiver.balance += amount;
