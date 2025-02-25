@@ -80,6 +80,55 @@ export class TransactionService {
     }
   }
 
+  async cancel(body: TransactionDto) {
+    
+    const { senderAccNo, receiverAccNo, amount } = body;
+    if (!senderAccNo || !receiverAccNo || !amount) {
+      throw new BadRequestException('Many field are required');
+    }
+
+    if (amount <= 0) {
+      throw new BadRequestException('Amount must be greater than zero.');
+    }
+
+    try {
+      // Find sender
+      const sender = await this.userModel.findOne({
+        accountNumber: senderAccNo,
+      });
+      if (!sender) return { message: 'Sender not found', success: false };
+
+      // Find receiver
+      const receiver = await this.userModel.findOne({
+        accountNumber: receiverAccNo,
+      });
+      if (!receiver) return { message: 'Receiver not found', success: false };
+
+      // Check if sender has enough balance
+      if (sender.balance < amount) {
+        return { message: 'Insufficient balance', success: false };
+      }
+      // Perform transaction
+      sender.balance -= amount;
+      receiver.balance += amount;
+      await sender.save();
+      await receiver.save();
+
+      // Create transaction record
+      const transaction = await this.transactionModel.create({
+        senderAccNo,
+        receiverAccNo,
+        amount,
+        transactionNo: Math.floor(1000000000 + Math.random() * 9000000000),
+      });
+      return { message: 'Cancel Transaction successful', transaction, body };
+    } catch (error) {
+      console.log(error);
+    }
+  
+
+    }
+
   async getHistory(accountNumber: number) {
     const transactions = await this.transactionModel
       .find({

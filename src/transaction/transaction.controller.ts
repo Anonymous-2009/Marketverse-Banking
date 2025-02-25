@@ -33,6 +33,16 @@ export class TransactionController {
     return this.transactionService.getHistory(accountNumber);
   }
 
+  @Post('cancel')
+  async cancel(@Body() body: TransactionDto) {
+    try {
+      return this.transactionService.cancel(body);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+
   @Get('all') // Using route parameter
   async getAll() {
     return this.transactionService.getAllUsers();
