@@ -83,6 +83,7 @@ export class TransactionService {
   async cancel(body: TransactionDto) {
     
     const { senderAccNo, receiverAccNo, amount } = body;
+
     if (!senderAccNo || !receiverAccNo || !amount) {
       throw new BadRequestException('Many field are required');
     }
@@ -135,6 +136,16 @@ export class TransactionService {
         $or: [{ senderAccNo: accountNumber }, { receiverAccNo: accountNumber }],
       })
       .sort({ createdAt: -1 });
+
+    return transactions;
+  }
+
+  async gettransaction(No: number) {
+    const transactions = await this.transactionModel
+      .findOne({
+        $or: [{ transactionNo: No }],
+      })
+    
 
     return transactions;
   }

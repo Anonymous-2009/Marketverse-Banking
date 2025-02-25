@@ -33,6 +33,11 @@ export class TransactionController {
     return this.transactionService.getHistory(accountNumber);
   }
 
+  @Get('transaction/:no') // Using route parameter
+  async getTrans(@Param('no') no: number) {
+    return this.transactionService.gettransaction(no);
+  }
+
   @Post('cancel')
   async cancel(@Body() body: TransactionDto) {
     try {
